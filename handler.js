@@ -28,7 +28,7 @@ const insertStudent = async (request, h) => {
 
         const response = h.response({
             status: 'success',
-            message: 'Data berhasil diinput'
+            message: 'Data berhasil diinput ke database'
         });
         response.code(200);
         return response;
