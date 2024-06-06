@@ -1,4 +1,4 @@
-const { convertBinary, fibonacci, insertStudent, getStudent, registerUser, loginUser, getUsers } = require('./handler.js');
+const { convertBinary, fibonacci, insertStudent, getStudent, registerUser, loginUser, getUsers, createWallet, viewWallet } = require('./handler.js');
 
 const routes = [
     {
@@ -54,6 +54,22 @@ const routes = [
         method: 'GET',
         path: '/users',
         handler: getUsers,
+    },
+    {
+        method: 'POST',
+        path: '/wallet',
+        handler: createWallet,
+        options: {
+            auth: 'jwt'
+        }
+    },
+    {
+        method: 'GET',
+        path: '/wallet',
+        handler: viewWallet,
+        options: {
+            auth: 'jwt'
+        }
     }
 ];
 

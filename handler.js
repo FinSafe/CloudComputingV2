@@ -156,7 +156,64 @@ const getStudent = async (request, h) => {
         response.code(400);
         return response;
     }
-}
+};
+const createWallet = async (request, h) => {
+    const { income, outcome } = request.payload;
+    const userId = request.auth.credentials.id;
+
+    try {
+        const userCheckQuery = 'SELECT * FROM users WHERE id = ?';
+        const users = await pool.query(userCheckQuery, [userId]);
+        if (users.length === 0) {
+            const response = h.response({
+                status: 'fail',
+                message: 'User tidak ditemukan'
+            });
+            response.code(404);
+            return response;
+        }
+
+        const query = 'INSERT INTO wallet (user_id, income, outcome) VALUES (?, ?, ?)';
+        const result = await pool.query(query, [userId, income, outcome]);
+
+        const response = h.response({
+            status: 'success',
+            message: 'Wallet berhasil dibuat',
+            walletId: result.insertId
+        });
+        response.code(201);
+        return response;
+    } catch (error) {
+        const response = h.response({
+            status: 'fail',
+            message: error.message
+        });
+        response.code(400);
+        return response;
+    }
+};
+const viewWallet = async (request, h) => {
+    const userId = request.auth.credentials.id;
+
+    try {
+        const query = 'SELECT * FROM wallet WHERE user_id = ?';
+        const wallets = await pool.query(query, [userId]);
+
+        const response = h.response({
+            status: 'success',
+            result: wallets
+        });
+        response.code(200);
+        return response;
+    } catch (error) {
+        const response = h.response({
+            status: 'fail',
+            result: error.message
+        });
+        response.code(400);
+        return response;
+    }
+};
 
 
 // const convertBinary = async (request, h) => {
@@ -235,5 +292,7 @@ module.exports = {
     getStudent,
     loginUser,
     registerUser,
-    getUsers
+    getUsers,
+    createWallet,
+    viewWallet
 }
