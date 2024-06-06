@@ -1,4 +1,7 @@
-const { convertBinary, fibonacci, insertStudent, getStudent, registerUser, loginUser, getUsers, createWallet, viewWallet } = require('./handler.js');
+const { convertBinary, fibonacci, insertStudent, getStudent, registerUser, loginUser, getUsers, createWallet, viewWallet, validateToken } = require('./handler.js');
+
+// const jwt = require('jsonwebtoken');
+
 
 const routes = [
     {
@@ -20,26 +23,7 @@ const routes = [
             return response;
         }
     },
-    // {
-    //     path: '/convert-binary',
-    //     method: 'POST',
-    //     handler: convertBinary
-    // },
-    // {
-    //     path: '/fibonacci',
-    //     method: 'POST',
-    //     handler: fibonacci
-    // },
-    {
-        path: '/insertStudent',
-        method: 'POST',
-        handler: insertStudent
-    },
-    {
-        path: '/getStudent',
-        method: 'GET',
-        handler: getStudent
-    },
+
     {
         method: 'POST',
         path: '/register',
@@ -60,7 +44,7 @@ const routes = [
         path: '/wallet',
         handler: createWallet,
         options: {
-            auth: 'jwt'
+            pre: [{ method: validateToken }]
         }
     },
     {
@@ -68,9 +52,9 @@ const routes = [
         path: '/wallet',
         handler: viewWallet,
         options: {
-            auth: 'jwt'
+            pre: [{ method: validateToken }]
         }
-    }
+    },
 ];
 
 module.exports = routes;

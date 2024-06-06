@@ -1,5 +1,6 @@
 const Hapi = require('@hapi/hapi');
 const routes = require('./routes.js');
+const jwt = require('jsonwebtoken'); // Tambahkan baris ini
 
 const init = async () => {
     const server = Hapi.server({
@@ -11,22 +12,29 @@ const init = async () => {
             },
         },
     });
-    await server.register(require('hapi-auth-jwt2'));
 
-    server.auth.strategy('jwt', 'jwt', {
-        key: process.env.JWT_SECRET,
-        validate: async (decoded, request, h) => {
-            const query = 'SELECT * FROM users WHERE id = ?';
-            const users = await pool.query(query, [decoded.id]);
+    // await server.register(require('hapi-auth-jwt2'));
 
-            if (users.length === 0) {
-                return { isValid: false };
-            }
+    // server.auth.strategy('jwt', 'jwt', {
+    //     key: process.env.JWT_SECRET,
+    //     validate: async (decoded, request, h) => {
+    //         try {
+    //             const query = 'SELECT * FROM users WHERE id = ?';
+    //             const users = await pool.query(query, [decoded.id]);
 
-            return { isValid: true };
-        }
-    });
-    server.auth.default('jwt');
+    //             if (users.length === 0) {
+    //                 return { isValid: false };
+    //             }
+
+    //             return { isValid: true };
+    //         } catch (error) {
+    //             return { isValid: false };
+    //         }
+    //     }
+    // });
+
+    // server.auth.default('jwt');
+
     server.route(routes);
 
     await server.start();
@@ -35,6 +43,7 @@ const init = async () => {
 
 process.on('unhandledRejection', (err) => {
     console.log(err);
+    process.exit(1);
 });
 
 init();
