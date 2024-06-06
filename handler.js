@@ -135,27 +135,15 @@ const getUsers = async (request, h) => {
 };
 
 const createWallet = async (request, h) => {
-    const { income, outcome } = request.payload;
-    const userId = request.auth.credentials.id;
+    const { userId, income, outcome } = request.payload;
 
     try {
-        const userCheckQuery = 'SELECT * FROM users WHERE id = ?';
-        const users = await pool.query(userCheckQuery, [userId]);
-        if (users.length === 0) {
-            const response = h.response({
-                status: 'fail',
-                message: 'User tidak ditemukan'
-            });
-            response.code(404);
-            return response;
-        }
-
         const query = 'INSERT INTO wallet (user_id, income, outcome) VALUES (?, ?, ?)';
         const result = await pool.query(query, [userId, income, outcome]);
 
         const response = h.response({
             status: 'success',
-            message: 'Wallet berhasil dibuat',
+            message: 'Wallet created successfully',
             walletId: result.insertId
         });
         response.code(201);
@@ -163,14 +151,15 @@ const createWallet = async (request, h) => {
     } catch (error) {
         const response = h.response({
             status: 'fail',
-            message: error.message
+            result: error.message
         });
         response.code(400);
         return response;
     }
 };
+
 const viewWallet = async (request, h) => {
-    const userId = request.auth.credentials.id;
+    const { userId } = request.params;
 
     try {
         const query = 'SELECT * FROM wallet WHERE user_id = ?';
@@ -191,6 +180,65 @@ const viewWallet = async (request, h) => {
         return response;
     }
 };
+
+
+// const createWallet = async (request, h) => {
+//     const { income, outcome } = request.payload;
+//     const userId = request.auth.credentials.id;
+
+//     try {
+//         const userCheckQuery = 'SELECT * FROM users WHERE id = ?';
+//         const users = await pool.query(userCheckQuery, [userId]);
+//         if (users.length === 0) {
+//             const response = h.response({
+//                 status: 'fail',
+//                 message: 'User tidak ditemukan'
+//             });
+//             response.code(404);
+//             return response;
+//         }
+
+//         const query = 'INSERT INTO wallet (user_id, income, outcome) VALUES (?, ?, ?)';
+//         const result = await pool.query(query, [userId, income, outcome]);
+
+//         const response = h.response({
+//             status: 'success',
+//             message: 'Wallet berhasil dibuat',
+//             walletId: result.insertId
+//         });
+//         response.code(201);
+//         return response;
+//     } catch (error) {
+//         const response = h.response({
+//             status: 'fail',
+//             message: error.message
+//         });
+//         response.code(400);
+//         return response;
+//     }
+// };
+// const viewWallet = async (request, h) => {
+//     const userId = request.auth.credentials.id;
+
+//     try {
+//         const query = 'SELECT * FROM wallet WHERE user_id = ?';
+//         const wallets = await pool.query(query, [userId]);
+
+//         const response = h.response({
+//             status: 'success',
+//             result: wallets
+//         });
+//         response.code(200);
+//         return response;
+//     } catch (error) {
+//         const response = h.response({
+//             status: 'fail',
+//             result: error.message
+//         });
+//         response.code(400);
+//         return response;
+//     }
+// };
 
 module.exports = {
     validateToken,

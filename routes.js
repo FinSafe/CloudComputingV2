@@ -42,19 +42,29 @@ const routes = [
     {
         method: 'POST',
         path: '/wallet',
-        handler: createWallet,
-        options: {
-            pre: [{ method: validateToken }]
-        }
+        handler: createWallet
     },
     {
         method: 'GET',
-        path: '/wallet',
-        handler: viewWallet,
-        options: {
-            pre: [{ method: validateToken }]
-        }
-    },
+        path: '/wallet/{userId}',
+        handler: viewWallet
+    }
+    // {
+    //     method: 'POST',
+    //     path: '/wallet',
+    //     handler: createWallet,
+    //     options: {
+    //         pre: [{ method: validateToken }]
+    //     }
+    // },
+    // {
+    //     method: 'GET',
+    //     path: '/wallet',
+    //     handler: viewWallet,
+    //     options: {
+    //         pre: [{ method: validateToken }]
+    //     }
+    // },
 ];
 
 module.exports = routes;
