@@ -1,4 +1,4 @@
-const { convertBinary, fibonacci, insertStudent, getStudent } = require('./handler.js');
+const { convertBinary, fibonacci, insertStudent, getStudent, registerUser, loginUser, getUsers } = require('./handler.js');
 
 const routes = [
     {
@@ -20,16 +20,16 @@ const routes = [
             return response;
         }
     },
-    {
-        path: '/convert-binary',
-        method: 'POST',
-        handler: convertBinary
-    },
-    {
-        path: '/fibonacci',
-        method: 'POST',
-        handler: fibonacci
-    },
+    // {
+    //     path: '/convert-binary',
+    //     method: 'POST',
+    //     handler: convertBinary
+    // },
+    // {
+    //     path: '/fibonacci',
+    //     method: 'POST',
+    //     handler: fibonacci
+    // },
     {
         path: '/insertStudent',
         method: 'POST',
@@ -40,6 +40,21 @@ const routes = [
         method: 'GET',
         handler: getStudent
     },
+    {
+        method: 'POST',
+        path: '/register',
+        handler: registerUser,
+    },
+    {
+        method: 'POST',
+        path: '/login',
+        handler: loginUser,
+    },
+    {
+        method: 'GET',
+        path: '/users',
+        handler: getUsers,
+    }
 ];
 
 module.exports = routes;
