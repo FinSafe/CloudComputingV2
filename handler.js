@@ -764,12 +764,12 @@ const createPrediction = async (request, h) => {
     const { total_futureOutcome, pertanyaan_id } = request.payload;
 
     try {
-        const query = 'INSERT INTO prediksi (total_futureOutcome, pertanyaan_id) VALUES (?, ?)';
+        const query = 'INSERT INTO prediction (total_futureOutcome, pertanyaan_id) VALUES (?, ?)';
         await pool.query(query, [total_futureOutcome, pertanyaan_id]);
 
         const response = h.response({
             status: 'success',
-            message: 'Prediksi berhasil ditambahkan'
+            message: 'prediction berhasil ditambahkan'
         });
         response.code(201);
         return response;
@@ -785,7 +785,7 @@ const createPrediction = async (request, h) => {
 
 const getPrediction = async (request, h) => {
     try {
-        const query = 'SELECT * FROM prediksi';
+        const query = 'SELECT * FROM prediction';
         const prediction = await pool.query(query);
 
         const response = h.response({
@@ -809,13 +809,13 @@ const updatePrediction = async (request, h) => {
     const { total_futureOutcome, pertanyaan_id } = request.payload;
 
     try {
-        const query = 'UPDATE prediksi SET total_futureOutcome = ?, pertanyaan_id = ? WHERE prediction_id = ?';
+        const query = 'UPDATE prediction SET total_futureOutcome = ?, pertanyaan_id = ? WHERE prediction_id = ?';
         const result = await pool.query(query, [total_futureOutcome, pertanyaan_id, prediction_id]);
 
         if (result.affectedRows === 0) {
             const response = h.response({
                 status: 'fail',
-                message: 'Prediksi tidak ditemukan',
+                message: 'prediction tidak ditemukan',
             });
             response.code(404);
             return response;
@@ -823,7 +823,7 @@ const updatePrediction = async (request, h) => {
 
         const response = h.response({
             status: 'success',
-            message: 'Prediksi berhasil diperbarui',
+            message: 'prediction berhasil diperbarui',
         });
         response.code(200);
         return response;
@@ -841,13 +841,13 @@ const deletePrediction = async (request, h) => {
     const { prediction_id } = request.params;
 
     try {
-        const query = 'DELETE FROM prediksi WHERE prediction_id = ?';
+        const query = 'DELETE FROM prediction WHERE prediction_id = ?';
         const result = await pool.query(query, [prediction_id]);
 
         if (result.affectedRows === 0) {
             const response = h.response({
                 status: 'fail',
-                message: 'Prediksi tidak ditemukan',
+                message: 'prediction tidak ditemukan',
             });
             response.code(404);
             return response;
@@ -855,7 +855,7 @@ const deletePrediction = async (request, h) => {
 
         const response = h.response({
             status: 'success',
-            message: 'Prediksi berhasil dihapus',
+            message: 'prediction berhasil dihapus',
         });
         response.code(200);
         return response;
