@@ -1,4 +1,4 @@
-const { convertBinary, fibonacci, insertStudent, getStudent, registerUser, loginUser, getUsers, createWallet, viewWallet, validateToken, deleteUser, editUser, getUserById, createIncome, getIncomes, getIncomeById, updateIncome, deleteIncome } = require('./handler.js');
+const { convertBinary, fibonacci, insertStudent, getStudent, registerUser, loginUser, getUsers, createWallet, viewWallet, validateToken, deleteUser, editUser, getUserById, createIncome, getIncomes, getIncomeById, updateIncome, deleteIncome, createOutcome, getOutcomes, getWallets, updateWallet, deleteWallet } = require('./handler.js');
 
 // const jwt = require('jsonwebtoken');
 
@@ -122,7 +122,7 @@ const routes = [
     {
         method: 'GET',
         path: '/outcome/{outcome_id}',
-        handler: getOutcomeById,
+        handler: getIncomeById,
         options: {
             pre: [{ method: validateToken }],
         },
@@ -130,7 +130,7 @@ const routes = [
     {
         method: 'PUT',
         path: '/outcome/{outcome_id}',
-        handler: updateOutcome,
+        handler: updateIncome,
         options: {
             pre: [{ method: validateToken }],
         },
@@ -138,7 +138,7 @@ const routes = [
     {
         method: 'DELETE',
         path: '/outcome/{outcome_id}',
-        handler: deleteOutcome,
+        handler: deleteIncome,
         options: {
             pre: [{ method: validateToken }],
         },
@@ -162,7 +162,7 @@ const routes = [
     {
         method: 'GET',
         path: '/wallet/{wallet_id}',
-        handler: getWalletById,
+        handler: getIncomeById,
         options: {
             pre: [{ method: validateToken }],
         },
