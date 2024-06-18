@@ -133,6 +133,71 @@ const getUsers = async (request, h) => {
         return response;
     }
 };
+const deleteUser = async (request, h) => {
+    const { id } = request.params;
+
+    try {
+        const query = 'DELETE FROM users WHERE id = ?';
+        const result = await pool.query(query, [id]);
+
+        if (result.affectedRows === 0) {
+            const response = h.response({
+                status: 'fail',
+                message: 'User tidak ditemukan',
+            });
+            response.code(404);
+            return response;
+        }
+
+        const response = h.response({
+            status: 'success',
+            message: 'User berhasil dihapus',
+        });
+        response.code(200);
+        return response;
+    } catch (error) {
+        const response = h.response({
+            status: 'fail',
+            result: error.message,
+        });
+        response.code(400);
+        return response;
+    }
+};
+const editUser = async (request, h) => {
+    const { id } = request.params;
+    const { nama, email, password } = request.payload;
+
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const query = 'UPDATE users SET nama = ?, email = ?, password = ? WHERE id = ?';
+        const result = await pool.query(query, [nama, email, hashedPassword, id]);
+
+        if (result.affectedRows === 0) {
+            const response = h.response({
+                status: 'fail',
+                message: 'User tidak ditemukan',
+            });
+            response.code(404);
+            return response;
+        }
+
+        const response = h.response({
+            status: 'success',
+            message: 'User berhasil diperbarui',
+        });
+        response.code(200);
+        return response;
+    } catch (error) {
+        const response = h.response({
+            status: 'fail',
+            result: error.message,
+        });
+        response.code(400);
+        return response;
+    }
+};
+
 
 const createWallet = async (request, h) => {
     const { userId, income, outcome } = request.payload;
@@ -182,69 +247,13 @@ const viewWallet = async (request, h) => {
 };
 
 
-// const createWallet = async (request, h) => {
-//     const { income, outcome } = request.payload;
-//     const userId = request.auth.credentials.id;
-
-//     try {
-//         const userCheckQuery = 'SELECT * FROM users WHERE id = ?';
-//         const users = await pool.query(userCheckQuery, [userId]);
-//         if (users.length === 0) {
-//             const response = h.response({
-//                 status: 'fail',
-//                 message: 'User tidak ditemukan'
-//             });
-//             response.code(404);
-//             return response;
-//         }
-
-//         const query = 'INSERT INTO wallet (user_id, income, outcome) VALUES (?, ?, ?)';
-//         const result = await pool.query(query, [userId, income, outcome]);
-
-//         const response = h.response({
-//             status: 'success',
-//             message: 'Wallet berhasil dibuat',
-//             walletId: result.insertId
-//         });
-//         response.code(201);
-//         return response;
-//     } catch (error) {
-//         const response = h.response({
-//             status: 'fail',
-//             message: error.message
-//         });
-//         response.code(400);
-//         return response;
-//     }
-// };
-// const viewWallet = async (request, h) => {
-//     const userId = request.auth.credentials.id;
-
-//     try {
-//         const query = 'SELECT * FROM wallet WHERE user_id = ?';
-//         const wallets = await pool.query(query, [userId]);
-
-//         const response = h.response({
-//             status: 'success',
-//             result: wallets
-//         });
-//         response.code(200);
-//         return response;
-//     } catch (error) {
-//         const response = h.response({
-//             status: 'fail',
-//             result: error.message
-//         });
-//         response.code(400);
-//         return response;
-//     }
-// };
-
 module.exports = {
     validateToken,
     loginUser,
     registerUser,
     getUsers,
+    deleteUser,
+    editUser,
     createWallet,
     viewWallet
 }

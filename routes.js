@@ -1,4 +1,4 @@
-const { convertBinary, fibonacci, insertStudent, getStudent, registerUser, loginUser, getUsers, createWallet, viewWallet, validateToken } = require('./handler.js');
+const { convertBinary, fibonacci, insertStudent, getStudent, registerUser, loginUser, getUsers, createWallet, viewWallet, validateToken, deleteUser, editUser } = require('./handler.js');
 
 // const jwt = require('jsonwebtoken');
 
@@ -38,6 +38,22 @@ const routes = [
         method: 'GET',
         path: '/users',
         handler: getUsers,
+    },
+    {
+        method: 'DELETE',
+        path: '/users/{id}',
+        handler: deleteUser,
+        options: {
+            pre: [{ method: validateToken }],
+        },
+    },
+    {
+        method: 'PUT',
+        path: '/users/{id}',
+        handler: editUser,
+        options: {
+            pre: [{ method: validateToken }],
+        },
     },
     {
         method: 'POST',
