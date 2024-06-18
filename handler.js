@@ -44,12 +44,12 @@ const validateToken = async (request, h) => {
 };
 
 const registerUser = async (request, h) => {
-    const { name, email, password } = request.payload;
+    const { nama, email, password } = request.payload;
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-        const query = 'INSERT INTO users (name, email, password) VALUES (?, ?, ?)';
-        await pool.query(query, [name, email, hashedPassword]);
+        const query = 'INSERT INTO users (nama, email, password) VALUES (?, ?, ?)';
+        await pool.query(query, [nama, email, hashedPassword]);
 
         const response = h.response({
             status: 'success',
