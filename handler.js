@@ -534,7 +534,14 @@ const createWallet = async (request, h) => {
 };
 const getWallets = async (request, h) => {
     try {
-        const query = 'SELECT * FROM wallet';
+        const query = `
+            SELECT wallet.wallet_id, wallet.user_id, wallet.income_id, wallet.outcome_id,
+            income.total_income, income.income_type, income.note as income_note,
+            outcome.total_outcome, outcome.outcome_type, outcome.note as outcome_note
+            FROM wallet
+            LEFT JOIN income ON wallet.income_id = income.income_id
+            LEFT JOIN outcome ON wallet.outcome_id = outcome.outcome_id
+        `;
         const wallets = await pool.query(query);
 
         const response = h.response({
@@ -546,7 +553,7 @@ const getWallets = async (request, h) => {
     } catch (error) {
         const response = h.response({
             status: 'fail',
-            message: error.message,
+            result: error.message,
         });
         response.code(400);
         return response;
