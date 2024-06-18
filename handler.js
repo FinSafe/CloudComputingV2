@@ -134,11 +134,11 @@ const getUsers = async (request, h) => {
     }
 };
 const deleteUser = async (request, h) => {
-    const { id } = request.params;
+    const { user_id } = request.params;
 
     try {
         const query = 'DELETE FROM users WHERE id = ?';
-        const result = await pool.query(query, [id]);
+        const result = await pool.query(query, [user_id]);
 
         if (result.affectedRows === 0) {
             const response = h.response({
@@ -165,13 +165,13 @@ const deleteUser = async (request, h) => {
     }
 };
 const editUser = async (request, h) => {
-    const { id } = request.params;
+    const { user_id } = request.params;
     const { nama, email, password } = request.payload;
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         const query = 'UPDATE users SET nama = ?, email = ?, password = ? WHERE id = ?';
-        const result = await pool.query(query, [nama, email, hashedPassword, id]);
+        const result = await pool.query(query, [nama, email, hashedPassword, user_id]);
 
         if (result.affectedRows === 0) {
             const response = h.response({
