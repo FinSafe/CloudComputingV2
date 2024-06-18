@@ -41,7 +41,7 @@ const routes = [
     },
     {
         method: 'DELETE',
-        path: '/users/{id}',
+        path: '/users/{user_id}',
         handler: deleteUser,
         options: {
             pre: [{ method: validateToken }],
@@ -49,7 +49,7 @@ const routes = [
     },
     {
         method: 'PUT',
-        path: '/users/{id}',
+        path: '/users/{user_id}',
         handler: editUser,
         options: {
             pre: [{ method: validateToken }],

@@ -137,7 +137,7 @@ const deleteUser = async (request, h) => {
     const { user_id } = request.params;
 
     try {
-        const query = 'DELETE FROM users WHERE id = ?';
+        const query = 'DELETE FROM users WHERE user_id = ?';
         const result = await pool.query(query, [user_id]);
 
         if (result.affectedRows === 0) {
@@ -164,13 +164,14 @@ const deleteUser = async (request, h) => {
         return response;
     }
 };
+
 const editUser = async (request, h) => {
     const { user_id } = request.params;
     const { nama, email, password } = request.payload;
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-        const query = 'UPDATE users SET nama = ?, email = ?, password = ? WHERE id = ?';
+        const query = 'UPDATE users SET nama = ?, email = ?, password = ? WHERE user_id = ?';
         const result = await pool.query(query, [nama, email, hashedPassword, user_id]);
 
         if (result.affectedRows === 0) {
@@ -197,6 +198,7 @@ const editUser = async (request, h) => {
         return response;
     }
 };
+
 
 
 const createWallet = async (request, h) => {
