@@ -42,7 +42,6 @@ const validateToken = async (request, h) => {
         }).code(401);
     }
 };
-
 const registerUser = async (request, h) => {
     const { nama, email, password } = request.payload;
 
@@ -66,7 +65,6 @@ const registerUser = async (request, h) => {
         return response;
     }
 };
-
 const loginUser = async (request, h) => {
     const { email, password } = request.payload;
 
@@ -164,7 +162,6 @@ const getUserById = async (request, h) => {
         return response;
     }
 };
-
 const deleteUser = async (request, h) => {
     const { user_id } = request.params;
 
@@ -196,7 +193,6 @@ const deleteUser = async (request, h) => {
         return response;
     }
 };
-
 const editUser = async (request, h) => {
     const { user_id } = request.params;
     const { nama, email, password } = request.payload;
@@ -230,6 +226,7 @@ const editUser = async (request, h) => {
         return response;
     }
 };
+
 const createIncome = async (request, h) => {
     const { total_income, income_type, note } = request.payload;
 
@@ -654,6 +651,508 @@ const deleteWallet = async (request, h) => {
     }
 };
 
+const createRekomendasi = async (request, h) => {
+    const { rasio_pengeluaran, danadarurat, bulan_danadarurat, prediction_id } = request.payload;
+
+    try {
+        const query = 'INSERT INTO rekomendasi (rasio_pengeluaran, danadarurat, bulan_danadarurat, prediction_id) VALUES (?, ?, ?, ?)';
+        await pool.query(query, [rasio_pengeluaran, danadarurat, bulan_danadarurat, prediction_id]);
+
+        const response = h.response({
+            status: 'success',
+            message: 'Rekomendasi berhasil ditambahkan'
+        });
+        response.code(201);
+        return response;
+    } catch (error) {
+        const response = h.response({
+            status: 'fail',
+            message: error.message,
+        });
+        response.code(400);
+        return response;
+    }
+};
+
+const getRekomendasi = async (request, h) => {
+    try {
+        const query = 'SELECT * FROM rekomendasi';
+        const rekomendasi = await pool.query(query);
+
+        const response = h.response({
+            status: 'success',
+            result: rekomendasi
+        });
+        response.code(200);
+        return response;
+    } catch (error) {
+        const response = h.response({
+            status: 'fail',
+            result: error.message,
+        });
+        response.code(400);
+        return response;
+    }
+};
+
+const updateRekomendasi = async (request, h) => {
+    const { rekomendasi_id } = request.params;
+    const { rasio_pengeluaran, danadarurat, bulan_danadarurat, prediction_id } = request.payload;
+
+    try {
+        const query = 'UPDATE rekomendasi SET rasio_pengeluaran = ?, danadarurat = ?, bulan_danadarurat = ?, prediction_id = ? WHERE rekomendasi_id = ?';
+        const result = await pool.query(query, [rasio_pengeluaran, danadarurat, bulan_danadarurat, prediction_id, rekomendasi_id]);
+
+        if (result.affectedRows === 0) {
+            const response = h.response({
+                status: 'fail',
+                message: 'Rekomendasi tidak ditemukan',
+            });
+            response.code(404);
+            return response;
+        }
+
+        const response = h.response({
+            status: 'success',
+            message: 'Rekomendasi berhasil diperbarui',
+        });
+        response.code(200);
+        return response;
+    } catch (error) {
+        const response = h.response({
+            status: 'fail',
+            message: error.message,
+        });
+        response.code(400);
+        return response;
+    }
+};
+
+const deleteRekomendasi = async (request, h) => {
+    const { rekomendasi_id } = request.params;
+
+    try {
+        const query = 'DELETE FROM rekomendasi WHERE rekomendasi_id = ?';
+        const result = await pool.query(query, [rekomendasi_id]);
+
+        if (result.affectedRows === 0) {
+            const response = h.response({
+                status: 'fail',
+                message: 'Rekomendasi tidak ditemukan',
+            });
+            response.code(404);
+            return response;
+        }
+
+        const response = h.response({
+            status: 'success',
+            message: 'Rekomendasi berhasil dihapus',
+        });
+        response.code(200);
+        return response;
+    } catch (error) {
+        const response = h.response({
+            status: 'fail',
+            message: error.message,
+        });
+        response.code(400);
+        return response;
+    }
+};
+
+const createPrediction = async (request, h) => {
+    const { total_futureOutcome, pertanyaan_id } = request.payload;
+
+    try {
+        const query = 'INSERT INTO prediksi (total_futureOutcome, pertanyaan_id) VALUES (?, ?)';
+        await pool.query(query, [total_futureOutcome, pertanyaan_id]);
+
+        const response = h.response({
+            status: 'success',
+            message: 'Prediksi berhasil ditambahkan'
+        });
+        response.code(201);
+        return response;
+    } catch (error) {
+        const response = h.response({
+            status: 'fail',
+            message: error.message,
+        });
+        response.code(400);
+        return response;
+    }
+};
+
+const getPrediction = async (request, h) => {
+    try {
+        const query = 'SELECT * FROM prediksi';
+        const prediction = await pool.query(query);
+
+        const response = h.response({
+            status: 'success',
+            result: prediction
+        });
+        response.code(200);
+        return response;
+    } catch (error) {
+        const response = h.response({
+            status: 'fail',
+            result: error.message,
+        });
+        response.code(400);
+        return response;
+    }
+};
+
+const updatePrediction = async (request, h) => {
+    const { prediction_id } = request.params;
+    const { total_futureOutcome, pertanyaan_id } = request.payload;
+
+    try {
+        const query = 'UPDATE prediksi SET total_futureOutcome = ?, pertanyaan_id = ? WHERE prediction_id = ?';
+        const result = await pool.query(query, [total_futureOutcome, pertanyaan_id, prediction_id]);
+
+        if (result.affectedRows === 0) {
+            const response = h.response({
+                status: 'fail',
+                message: 'Prediksi tidak ditemukan',
+            });
+            response.code(404);
+            return response;
+        }
+
+        const response = h.response({
+            status: 'success',
+            message: 'Prediksi berhasil diperbarui',
+        });
+        response.code(200);
+        return response;
+    } catch (error) {
+        const response = h.response({
+            status: 'fail',
+            message: error.message,
+        });
+        response.code(400);
+        return response;
+    }
+};
+
+const deletePrediction = async (request, h) => {
+    const { prediction_id } = request.params;
+
+    try {
+        const query = 'DELETE FROM prediksi WHERE prediction_id = ?';
+        const result = await pool.query(query, [prediction_id]);
+
+        if (result.affectedRows === 0) {
+            const response = h.response({
+                status: 'fail',
+                message: 'Prediksi tidak ditemukan',
+            });
+            response.code(404);
+            return response;
+        }
+
+        const response = h.response({
+            status: 'success',
+            message: 'Prediksi berhasil dihapus',
+        });
+        response.code(200);
+        return response;
+    } catch (error) {
+        const response = h.response({
+            status: 'fail',
+            message: error.message,
+        });
+        response.code(400);
+        return response;
+    }
+};
+const createPertanyaan = async (request, h) => {
+    const {
+        jenis_kelamin,
+        usia,
+        status_pernikahan,
+        pendidikan_terakhir,
+        pendapatan_tahunan,
+        sumber_pendapatan,
+        provinsi,
+        tipe_bangunan,
+        luas_rumah,
+        jumlah_kamar,
+        menggunakan_listrik,
+        status_kepemilikan,
+        tipe_RT,
+        jumlah_anggotaRT,
+        jumlah_bekerja,
+        roda4,
+        roda2_3,
+        jumlah_tv,
+        jumlah_ac,
+        jumlah_pc,
+        jumlah_hp,
+        jumlah_kulkas,
+        jumlah_mesincuci,
+        memiliki_danadarurat,
+        jumlah_danadarurat,
+        memiliki_utang,
+        jumlah_utang,
+        user_id
+    } = request.payload;
+
+    try {
+        const query = `
+            INSERT INTO pertanyaan (
+                jenis_kelamin,
+                usia,
+                status_pernikahan,
+                pendidikan_terakhir,
+                pendapatan_tahunan,
+                sumber_pendapatan,
+                provinsi,
+                tipe_bangunan,
+                luas_rumah,
+                jumlah_kamar,
+                menggunakan_listrik,
+                status_kepemilikan,
+                tipe_RT,
+                jumlah_anggotaRT,
+                jumlah_bekerja,
+                roda4,
+                roda2_3,
+                jumlah_tv,
+                jumlah_ac,
+                jumlah_pc,
+                jumlah_hp,
+                jumlah_kulkas,
+                jumlah_mesincuci,
+                memiliki_danadarurat,
+                jumlah_danadarurat,
+                memiliki_utang,
+                jumlah_utang,
+                user_id
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+        await pool.query(query, [
+            jenis_kelamin,
+            usia,
+            status_pernikahan,
+            pendidikan_terakhir,
+            pendapatan_tahunan,
+            sumber_pendapatan,
+            provinsi,
+            tipe_bangunan,
+            luas_rumah,
+            jumlah_kamar,
+            menggunakan_listrik,
+            status_kepemilikan,
+            tipe_RT,
+            jumlah_anggotaRT,
+            jumlah_bekerja,
+            roda4,
+            roda2_3,
+            jumlah_tv,
+            jumlah_ac,
+            jumlah_pc,
+            jumlah_hp,
+            jumlah_kulkas,
+            jumlah_mesincuci,
+            memiliki_danadarurat,
+            jumlah_danadarurat,
+            memiliki_utang,
+            jumlah_utang,
+            user_id
+        ]);
+
+        const response = h.response({
+            status: 'success',
+            message: 'Pertanyaan berhasil ditambahkan'
+        });
+        response.code(201);
+        return response;
+    } catch (error) {
+        const response = h.response({
+            status: 'fail',
+            message: error.message,
+        });
+        response.code(400);
+        return response;
+    }
+};
+const getPertanyaan = async (request, h) => {
+    try {
+        const query = 'SELECT * FROM pertanyaan';
+        const pertanyaan = await pool.query(query);
+
+        const response = h.response({
+            status: 'success',
+            result: pertanyaan
+        });
+        response.code(200);
+        return response;
+    } catch (error) {
+        const response = h.response({
+            status: 'fail',
+            result: error.message,
+        });
+        response.code(400);
+        return response;
+    }
+};
+const updatePertanyaan = async (request, h) => {
+    const { pertanyaan_id } = request.params;
+    const {
+        jenis_kelamin,
+        usia,
+        status_pernikahan,
+        pendidikan_terakhir,
+        pendapatan_tahunan,
+        sumber_pendapatan,
+        provinsi,
+        tipe_bangunan,
+        luas_rumah,
+        jumlah_kamar,
+        menggunakan_listrik,
+        status_kepemilikan,
+        tipe_RT,
+        jumlah_anggotaRT,
+        jumlah_bekerja,
+        roda4,
+        roda2_3,
+        jumlah_tv,
+        jumlah_ac,
+        jumlah_pc,
+        jumlah_hp,
+        jumlah_kulkas,
+        jumlah_mesincuci,
+        memiliki_danadarurat,
+        jumlah_danadarurat,
+        memiliki_utang,
+        jumlah_utang,
+        user_id
+    } = request.payload;
+
+    try {
+        const query = `
+            UPDATE pertanyaan SET
+                jenis_kelamin = ?,
+                usia = ?,
+                status_pernikahan = ?,
+                pendidikan_terakhir = ?,
+                pendapatan_tahunan = ?,
+                sumber_pendapatan = ?,
+                provinsi = ?,
+                tipe_bangunan = ?,
+                luas_rumah = ?,
+                jumlah_kamar = ?,
+                menggunakan_listrik = ?,
+                status_kepemilikan = ?,
+                tipe_RT = ?,
+                jumlah_anggotaRT = ?,
+                jumlah_bekerja = ?,
+                roda4 = ?,
+                roda2_3 = ?,
+                jumlah_tv = ?,
+                jumlah_ac = ?,
+                jumlah_pc = ?,
+                jumlah_hp = ?,
+                jumlah_kulkas = ?,
+                jumlah_mesincuci = ?,
+                memiliki_danadarurat = ?,
+                jumlah_danadarurat = ?,
+                memiliki_utang = ?,
+                jumlah_utang = ?,
+                user_id = ?
+            WHERE pertanyaan_id = ?
+        `;
+        const result = await pool.query(query, [
+            jenis_kelamin,
+            usia,
+            status_pernikahan,
+            pendidikan_terakhir,
+            pendapatan_tahunan,
+            sumber_pendapatan,
+            provinsi,
+            tipe_bangunan,
+            luas_rumah,
+            jumlah_kamar,
+            menggunakan_listrik,
+            status_kepemilikan,
+            tipe_RT,
+            jumlah_anggotaRT,
+            jumlah_bekerja,
+            roda4,
+            roda2_3,
+            jumlah_tv,
+            jumlah_ac,
+            jumlah_pc,
+            jumlah_hp,
+            jumlah_kulkas,
+            jumlah_mesincuci,
+            memiliki_danadarurat,
+            jumlah_danadarurat,
+            memiliki_utang,
+            jumlah_utang,
+            user_id,
+            pertanyaan_id
+        ]);
+
+        if (result.affectedRows === 0) {
+            const response = h.response({
+                status: 'fail',
+                message: 'Pertanyaan tidak ditemukan',
+            });
+            response.code(404);
+            return response;
+        }
+
+        const response = h.response({
+            status: 'success',
+            message: 'Pertanyaan berhasil diperbarui',
+        });
+        response.code(200);
+        return response;
+    } catch (error) {
+        const response = h.response({
+            status: 'fail',
+            message: error.message,
+        });
+        response.code(400);
+        return response;
+    }
+};
+const deletePertanyaan = async (request, h) => {
+    const { pertanyaan_id } = request.params;
+
+    try {
+        const query = 'DELETE FROM pertanyaan WHERE pertanyaan_id = ?';
+        const result = await pool.query(query, [pertanyaan_id]);
+
+        if (result.affectedRows === 0) {
+            const response = h.response({
+                status: 'fail',
+                message: 'Pertanyaan tidak ditemukan',
+            });
+            response.code(404);
+            return response;
+        }
+
+        const response = h.response({
+            status: 'success',
+            message: 'Pertanyaan berhasil dihapus',
+        });
+        response.code(200);
+        return response;
+    } catch (error) {
+        const response = h.response({
+            status: 'fail',
+            message: error.message,
+        });
+        response.code(400);
+        return response;
+    }
+};
+
 
 // const createWallet = async (request, h) => {
 //     const { userId, income, outcome } = request.payload;
@@ -726,5 +1225,17 @@ module.exports = {
     getWalletById,
     updateWallet,
     deleteWallet,
+    createRekomendasi,
+    getRekomendasi,
+    updateRekomendasi,
+    deleteRekomendasi,
+    createPrediction,
+    getPrediction,
+    updatePrediction,
+    deletePrediction,
+    createPertanyaan,
+    getPertanyaan,
+    updatePertanyaan,
+    deletePertanyaan
     // viewWallet
 }
