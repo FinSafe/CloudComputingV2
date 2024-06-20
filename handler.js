@@ -99,6 +99,7 @@ const loginUser = async (request, h) => {
             status: 'success',
             message: 'Login berhasil',
             token,
+            name: user.name  // Menambahkan nama pengguna ke dalam respons
         });
         response.code(200);
         return response;
@@ -111,6 +112,7 @@ const loginUser = async (request, h) => {
         return response;
     }
 };
+
 const getUsers = async (request, h) => {
     try {
         const query = 'SELECT * FROM users';
